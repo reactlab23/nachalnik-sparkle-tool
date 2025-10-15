@@ -38,6 +38,14 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
 
+    /* Mode colors - UGC (purple), Video (blue), Photo (orange) */
+    --mode-ugc: 270 80% 60%;
+    --mode-ugc-foreground: 0 0% 100%;
+    --mode-video: 220 90% 56%;
+    --mode-video-foreground: 0 0% 100%;
+    --mode-photo: 25 95% 53%;
+    --mode-photo-foreground: 0 0% 100%;
+
     --sidebar-background: 0 0% 98%;
 
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -83,6 +91,15 @@ All colors MUST be HSL.
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+    
+    /* Mode colors - dark mode */
+    --mode-ugc: 270 70% 65%;
+    --mode-ugc-foreground: 0 0% 100%;
+    --mode-video: 220 80% 60%;
+    --mode-video-foreground: 0 0% 100%;
+    --mode-photo: 25 90% 58%;
+    --mode-photo-foreground: 0 0% 100%;
+    
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
