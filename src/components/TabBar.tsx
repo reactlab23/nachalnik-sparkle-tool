@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { Video, Film, Camera, Home } from "lucide-react";
+import { Video, Film, Camera, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
-  { path: "/", icon: Home, label: "Главная" },
+  { path: "/projects", icon: FolderOpen, label: "Проекты" },
   { path: "/ugc", icon: Video, label: "UGC", color: "mode-ugc" },
   { path: "/video", icon: Film, label: "Видео", color: "mode-video" },
   { path: "/photo", icon: Camera, label: "Фото", color: "mode-photo" },

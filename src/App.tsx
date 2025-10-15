@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import UGCGenerator from "./pages/UGCGenerator";
 import VideoStudio from "./pages/VideoStudio";
 import PhotoStudio from "./pages/PhotoStudio";
+import Projects from "./pages/Projects";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ const App = () => (
         <div className="min-h-screen">
           <Routes>
             <Route path="/" element={<Index />} />
+            <Route path="/projects" element={<Projects />} />
             <Route path="/ugc" element={<UGCGenerator />} />
             <Route path="/video" element={<VideoStudio />} />
             <Route path="/photo" element={<PhotoStudio />} />
