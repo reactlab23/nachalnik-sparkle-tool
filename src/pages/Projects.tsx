@@ -92,26 +92,26 @@ const Projects = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <div className="container mx-auto px-4 py-6">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <div className="container mx-auto px-4 py-4 md:py-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Мои проекты</h1>
-          <Button onClick={() => navigate("/")} className="gap-2">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 md:mb-6 gap-3">
+          <h1 className="text-2xl md:text-3xl font-bold">Мои проекты</h1>
+          <Button onClick={() => navigate("/")} className="gap-2 w-full md:w-auto">
             <Plus className="w-4 h-4" />
             Создать
           </Button>
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col gap-3 mb-6">
+        <div className="flex flex-col gap-3 mb-4 md:mb-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Поиск по названию..."
-              className="pl-10"
+              className="pl-10 text-sm"
             />
           </div>
 
@@ -144,16 +144,16 @@ const Projects = () => {
 
         {/* Projects Grid */}
         {filteredProjects.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mb-4 text-6xl">🎨</div>
-            <h3 className="text-xl font-semibold mb-2">Проектов пока нет</h3>
-            <p className="text-muted-foreground mb-6">
+          <div className="text-center py-12 md:py-16">
+            <div className="mb-3 md:mb-4 text-4xl md:text-6xl">🎨</div>
+            <h3 className="text-lg md:text-xl font-semibold mb-2">Проектов пока нет</h3>
+            <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
               Создайте свой первый шедевр!
             </p>
             <Button onClick={() => navigate("/")}>Начать создание</Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {filteredProjects.map((project) => (
               <Card
                 key={project.id}
@@ -165,23 +165,23 @@ const Projects = () => {
                     alt={project.title}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute top-2 right-2">
+                  <div className="absolute top-1.5 right-1.5 md:top-2 md:right-2">
                     <Badge
                       variant="secondary"
-                      className={`bg-[hsl(var(--mode-${project.mode}))] text-[hsl(var(--mode-${project.mode}-foreground))] gap-1`}
+                      className={`bg-[hsl(var(--mode-${project.mode}))] text-[hsl(var(--mode-${project.mode}-foreground))] gap-1 text-[10px] md:text-xs px-1.5 md:px-2`}
                     >
                       {ModeIcon(project.mode)}
-                      {modeLabels[project.mode]}
+                      <span className="hidden md:inline">{modeLabels[project.mode]}</span>
                     </Badge>
                   </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold mb-2 line-clamp-1">
+                <div className="p-3 md:p-4">
+                  <h3 className="font-semibold mb-1.5 md:mb-2 line-clamp-1 text-sm md:text-base">
                     {project.title}
                   </h3>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between text-xs md:text-sm text-muted-foreground">
                     <span>{new Date(project.date).toLocaleDateString("ru")}</span>
-                    <Badge variant="outline">{statusLabels[project.status]}</Badge>
+                    <Badge variant="outline" className="text-[10px] md:text-xs">{statusLabels[project.status]}</Badge>
                   </div>
                 </div>
               </Card>

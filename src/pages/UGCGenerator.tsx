@@ -34,21 +34,21 @@ const UGCGenerator = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-3 md:px-4 py-2 md:py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <div
-                className="p-2 rounded-xl"
+                className="p-1.5 md:p-2 rounded-lg md:rounded-xl"
                 style={{
                   background: "var(--gradient-ugc)",
                 }}
               >
-                <Video className="w-5 h-5 text-white" />
+                <Video className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold">UGC Generator</h1>
+              <h1 className="text-base md:text-xl font-bold">UGC Generator</h1>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               {step > 0 && step <= 4 && (
                 <>
                   <Badge variant="outline" className="gap-1">
@@ -78,10 +78,10 @@ const UGCGenerator = () => {
           <ToolsSidebar />
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col pb-20 md:pb-0">
             <ProjectsCarousel />
             
-            <div className="flex-1 px-4">
+            <div className="flex-1 px-3 md:px-4">
               <WizardStep
           currentStep={step}
           totalSteps={4}
@@ -113,10 +113,10 @@ const UGCGenerator = () => {
         >
           {step === 1 && (
             <div className="space-y-4">
-              <Card className="border-2 border-dashed border-[hsl(var(--mode-ugc))] bg-[hsl(var(--mode-ugc-soft))] p-12 text-center cursor-pointer hover:bg-[hsl(var(--mode-ugc-soft))]/80 transition-colors">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-[hsl(var(--mode-ugc))]" />
-                <p className="text-lg font-semibold mb-2">Загрузите медиа</p>
-                <p className="text-sm text-muted-foreground">
+              <Card className="border-2 border-dashed border-[hsl(var(--mode-ugc))] bg-[hsl(var(--mode-ugc-soft))] p-8 md:p-12 text-center cursor-pointer hover:bg-[hsl(var(--mode-ugc-soft))]/80 transition-colors">
+                <Upload className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-[hsl(var(--mode-ugc))]" />
+                <p className="text-base md:text-lg font-semibold mb-2">Загрузите медиа</p>
+                <p className="text-xs md:text-sm text-muted-foreground">
                   Перетащите файл или нажмите для выбора
                 </p>
               </Card>
@@ -158,7 +158,7 @@ const UGCGenerator = () => {
           )}
 
           {step === 3 && (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-3">
                   Опишите стиль текстом
@@ -167,8 +167,8 @@ const UGCGenerator = () => {
                   placeholder="Например: киберпанк, неоновые огни, динамичный монтаж..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
-                  rows={4}
-                  className="resize-none"
+                  rows={3}
+                  className="resize-none text-sm"
                 />
               </div>
 

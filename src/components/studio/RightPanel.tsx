@@ -39,7 +39,7 @@ interface RightPanelProps {
 
 export const RightPanel = ({ modeColor = "primary" }: RightPanelProps) => {
   return (
-    <div className="w-80 bg-card border-l flex flex-col">
+    <div className="hidden lg:flex w-80 bg-card border-l flex-col">
       {/* Chat Section */}
       <div className="border-b p-4">
         <div className="flex items-start gap-3 mb-4">

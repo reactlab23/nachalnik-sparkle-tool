@@ -17,7 +17,7 @@ const tools: Tool[] = [
 
 export const ToolsSidebar = () => {
   return (
-    <div className="w-16 bg-card border-r flex flex-col items-center py-4 gap-3">
+    <div className="hidden lg:flex w-16 bg-card border-r flex-col items-center py-4 gap-3">
       {tools.map((tool, index) => (
         <Button
           key={index}

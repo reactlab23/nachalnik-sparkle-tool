@@ -12,21 +12,21 @@ const VideoStudio = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="border-b bg-card">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-3 md:px-4 py-2 md:py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 md:gap-3">
               <div
-                className="p-2 rounded-xl"
+                className="p-1.5 md:p-2 rounded-lg md:rounded-xl"
                 style={{
                   background: "var(--gradient-video)",
                 }}
               >
-                <Film className="w-5 h-5 text-white" />
+                <Film className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold">AI-Видеостудия</h1>
+              <h1 className="text-base md:text-xl font-bold">AI-Видеостудия</h1>
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Badge variant="outline" className="gap-1">
                 Шаг 1: Сценарий
               </Badge>
@@ -51,14 +51,14 @@ const VideoStudio = () => {
         <ToolsSidebar />
 
         {/* Main Content */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col pb-20 md:pb-0">
           <ProjectsCarousel />
           
-          <div className="flex-1 px-4">
+          <div className="flex-1 px-3 md:px-4">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold mb-6">Генератор контента</h2>
+              <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Генератор контента</h2>
               
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
                 <Card className="p-6 cursor-pointer hover:bg-muted transition-colors border-2 border-[hsl(var(--mode-video))] bg-[hsl(var(--mode-video))]/5">
                   <FileText className="w-8 h-8 text-[hsl(var(--mode-video))] mb-3" />
                   <h3 className="font-semibold mb-2">Создать по сценарию</h3>
@@ -76,17 +76,17 @@ const VideoStudio = () => {
                 </Card>
               </div>
 
-              <Card className="p-6">
+              <Card className="p-4 md:p-6">
                 <label className="block text-sm font-medium mb-3">
                   Опишите концепцию вашего видео
                 </label>
                 <Textarea
                   placeholder="Например: короткометражный фильм о путешествии во времени..."
-                  rows={6}
-                  className="resize-none mb-4"
+                  rows={4}
+                  className="resize-none mb-4 text-sm"
                 />
                 
-                <div className="flex gap-4">
+                <div className="flex flex-col md:flex-row gap-3 md:gap-4">
                   <Button className="flex-1" variant="outline">
                     <Plus className="w-4 h-4 mr-2" />
                     Добавить персонажей
