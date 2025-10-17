@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { Video, Upload, Sparkles, Music, TrendingUp } from "lucide-react";
+import { Video, Upload, Sparkles, Music, TrendingUp, Clock, Cpu } from "lucide-react";
 import { WizardStep } from "@/components/WizardStep";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { AIChat } from "@/components/AIChat";
+import { ToolsSidebar } from "@/components/studio/ToolsSidebar";
+import { RightPanel } from "@/components/studio/RightPanel";
+import { ProjectsCarousel } from "@/components/studio/ProjectsCarousel";
+import { Badge } from "@/components/ui/badge";
 
 const platforms = [
   { id: "reels", name: "Stories/Reels", ratio: "9:16", icon: "📱" },
@@ -27,9 +31,58 @@ const UGCGenerator = () => {
   const [showChat, setShowChat] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <div className="border-b bg-card">
+        <div className="container mx-auto px-4 py-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div
+                className="p-2 rounded-xl"
+                style={{
+                  background: "var(--gradient-ugc)",
+                }}
+              >
+                <Video className="w-5 h-5 text-white" />
+              </div>
+              <h1 className="text-xl font-bold">UGC Generator</h1>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {step > 0 && step <= 4 && (
+                <>
+                  <Badge variant="outline" className="gap-1">
+                    Шаг {step}: {step === 1 ? "Изображение" : step === 2 ? "Видео" : step === 3 ? "Текст" : "Экспорт"}
+                  </Badge>
+                  <Badge variant="outline" className="gap-1">
+                    <Clock className="w-3 h-3" />
+                    ~2 мин
+                  </Badge>
+                  <Badge variant="outline" className="gap-1">
+                    <Cpu className="w-3 h-3" />
+                    GPU
+                  </Badge>
+                  <Badge className="bg-muted text-foreground hover:bg-muted">
+                    1920 × 1080
+                  </Badge>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {!showChat ? (
-        <WizardStep
+        <div className="flex-1 flex">
+          {/* Left Sidebar */}
+          <ToolsSidebar />
+
+          {/* Main Content */}
+          <div className="flex-1 flex flex-col">
+            <ProjectsCarousel />
+            
+            <div className="flex-1 px-4">
+              <WizardStep
           currentStep={step}
           totalSteps={4}
           title={
@@ -175,7 +228,13 @@ const UGCGenerator = () => {
               <p className="text-muted-foreground">Подбираем музыку...</p>
             </div>
           )}
-        </WizardStep>
+              </WizardStep>
+            </div>
+          </div>
+
+          {/* Right Panel */}
+          <RightPanel modeColor="ugc" />
+        </div>
       ) : (
         <div className="container mx-auto px-4 py-6 pb-24">
           <div className="flex items-center gap-3 mb-6">
