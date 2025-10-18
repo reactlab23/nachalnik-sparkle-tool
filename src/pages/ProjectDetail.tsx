@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { 
   ArrowLeft, 
   Edit, 
@@ -265,78 +266,82 @@ const ProjectDetail = () => {
           </h2>
         </div>
 
-        <div className="grid gap-4">
+        <Accordion type="single" collapsible className="space-y-2">
           {scenes.map((scene) => (
-            <Card key={scene.id} className="p-4 md:p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold">Сцена {scene.number}</h3>
-                <Badge variant={scene.status === "ready" ? "default" : "secondary"}>
-                  {scene.status === "ready" ? "Готова" : 
-                   scene.status === "pending" ? "Ожидает" : "Ошибка"}
-                </Badge>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4">
-                {/* Prompts */}
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-sm font-medium">Промпт для изображения</label>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(scene.imagePrompt)}
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <Textarea
-                      value={scene.imagePrompt}
-                      readOnly
-                      rows={4}
-                      className="resize-none text-sm bg-muted"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="text-sm font-medium">Промпт для видео</label>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(scene.videoPrompt)}
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <Textarea
-                      value={scene.videoPrompt}
-                      readOnly
-                      rows={4}
-                      className="resize-none text-sm bg-muted"
-                    />
-                  </div>
+            <AccordionItem key={scene.id} value={scene.id} className="border rounded-lg">
+              <AccordionTrigger className="px-4 md:px-6 hover:no-underline">
+                <div className="flex items-center justify-between w-full pr-4">
+                  <h3 className="font-semibold">Сцена {scene.number}</h3>
+                  <Badge variant={scene.status === "ready" ? "default" : "secondary"}>
+                    {scene.status === "ready" ? "Готова" : 
+                     scene.status === "pending" ? "Ожидает" : "Ошибка"}
+                  </Badge>
                 </div>
-
-                {/* Result */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Результат</label>
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
-                    {scene.imageUrl ? (
-                      <img 
-                        src={scene.imageUrl} 
-                        alt={`Сцена ${scene.number}`}
-                        className="w-full h-full object-cover"
+              </AccordionTrigger>
+              
+              <AccordionContent className="px-4 md:px-6 pb-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Prompts */}
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-sm font-medium">Промпт для изображения</label>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(scene.imagePrompt)}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={scene.imagePrompt}
+                        readOnly
+                        rows={4}
+                        className="resize-none text-sm bg-muted"
                       />
-                    ) : (
-                      <ImageIcon className="w-12 h-12 text-muted-foreground" />
-                    )}
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <label className="text-sm font-medium">Промпт для видео</label>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(scene.videoPrompt)}
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <Textarea
+                        value={scene.videoPrompt}
+                        readOnly
+                        rows={4}
+                        className="resize-none text-sm bg-muted"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Result */}
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">Результат</label>
+                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                      {scene.imageUrl ? (
+                        <img 
+                          src={scene.imageUrl} 
+                          alt={`Сцена ${scene.number}`}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </AccordionContent>
+            </AccordionItem>
           ))}
-        </div>
+        </Accordion>
       </div>
 
       {/* Edit Dialog */}
