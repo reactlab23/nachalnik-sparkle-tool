@@ -74,8 +74,10 @@ const UGCGenerator = () => {
 
       {!showChat ? (
         <div className="flex-1 flex">
-          {/* Left Sidebar */}
-          <ToolsSidebar />
+          {/* Left Sidebar - Hidden on mobile */}
+          <div className="hidden lg:block">
+            <ToolsSidebar />
+          </div>
 
           {/* Main Content */}
           <div className="flex-1 flex flex-col pb-20 md:pb-0">
@@ -232,8 +234,10 @@ const UGCGenerator = () => {
             </div>
           </div>
 
-          {/* Right Panel */}
-          <RightPanel modeColor="ugc" />
+          {/* Right Panel - Hidden on mobile */}
+          <div className="hidden lg:block">
+            <RightPanel modeColor="ugc" />
+          </div>
         </div>
       ) : (
         <div className="container mx-auto px-4 py-6 pb-24">

@@ -54,8 +54,10 @@ const PhotoStudio = () => {
       </div>
 
       <div className="flex-1 flex">
-        {/* Left Sidebar */}
-        <ToolsSidebar />
+        {/* Left Sidebar - Hidden on mobile */}
+        <div className="hidden lg:block">
+          <ToolsSidebar />
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col pb-20 md:pb-0">
@@ -111,8 +113,10 @@ const PhotoStudio = () => {
           </div>
         </div>
 
-        {/* Right Panel */}
-        <RightPanel modeColor="photo" />
+        {/* Right Panel - Hidden on mobile */}
+        <div className="hidden lg:block">
+          <RightPanel modeColor="photo" />
+        </div>
       </div>
     </div>
   );
