@@ -1,0 +1,439 @@
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  ArrowLeft, 
+  Edit, 
+  Sparkles, 
+  Image as ImageIcon, 
+  Video, 
+  AlertCircle,
+  Copy,
+  CheckCircle2,
+  Loader2
+} from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+
+interface Scene {
+  id: string;
+  number: number;
+  status: "pending" | "ready" | "error";
+  imagePrompt: string;
+  videoPrompt: string;
+  imageUrl?: string;
+}
+
+// Mock data - в реальности будет загружаться через API
+const mockProject = {
+  id: "1",
+  name: "Промо-ролик для Instagram",
+  status: "ready" as "draft" | "processing" | "ready" | "error",
+  characterDescription: "Молодая девушка, стиль casual",
+  settingDescription: "Уютное кафе с большими окнами",
+  script: "Привет! Сегодня покажу вам...",
+  additionalNotes: "Динамичная музыка",
+  voiceDescription: "Энергичный женский голос",
+  videoType: "series",
+  sceneCount: 3,
+  aspectRatio: "9:16",
+  imageModel: "seedream",
+  referenceImageUrl: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400",
+};
+
+const mockScenes: Scene[] = [
+  {
+    id: "1",
+    number: 1,
+    status: "ready",
+    imagePrompt: "A young woman in casual style sitting in a cozy cafe with large windows, natural lighting, modern interior design",
+    videoPrompt: "Camera slowly zooms in on the woman as she smiles and waves at the camera",
+    imageUrl: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400",
+  },
+  {
+    id: "2",
+    number: 2,
+    status: "ready",
+    imagePrompt: "Close-up of hands holding a coffee cup in a cafe setting, warm tones, aesthetic composition",
+    videoPrompt: "Hands lift the coffee cup, steam rising, slow motion effect",
+    imageUrl: "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400",
+  },
+  {
+    id: "3",
+    number: 3,
+    status: "pending",
+    imagePrompt: "Wide shot of the cafe interior, people in background, golden hour lighting",
+    videoPrompt: "Pan across the cafe showing the atmosphere and ambiance",
+  },
+];
+
+const ProjectDetail = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [project] = useState(mockProject);
+  const [scenes, setScenes] = useState<Scene[]>(mockScenes);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentStep, setCurrentStep] = useState<"prompts" | "images" | "video">("prompts");
+  const [jobStatus, setJobStatus] = useState("");
+
+  const completedScenes = scenes.filter(s => s.status === "ready").length;
+  const progressValue = (completedScenes / scenes.length) * 100;
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "draft": return "bg-gray-500";
+      case "processing": return "bg-blue-500 animate-pulse";
+      case "ready": return "bg-green-500";
+      case "error": return "bg-red-500";
+      default: return "bg-gray-500";
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast({
+      title: "Скопировано",
+      description: "Промпт скопирован в буфер обмена",
+    });
+  };
+
+  const handleGeneratePrompts = async () => {
+    setIsGenerating(true);
+    setCurrentStep("prompts");
+    setJobStatus("Анализирую изображение...");
+    
+    // Симуляция API запроса
+    setTimeout(() => {
+      setJobStatus("Создаю промпты для сцен...");
+    }, 2000);
+    
+    setTimeout(() => {
+      setIsGenerating(false);
+      setJobStatus("");
+      toast({
+        title: "Готово!",
+        description: "Промпты для всех сцен созданы",
+      });
+    }, 4000);
+  };
+
+  const handleGenerateImages = async () => {
+    setIsGenerating(true);
+    setCurrentStep("images");
+    setJobStatus("Генерирую изображения...");
+    
+    // Симуляция генерации изображений
+    setTimeout(() => {
+      const updatedScenes = scenes.map(scene => ({
+        ...scene,
+        status: "ready" as const,
+        imageUrl: scene.imageUrl || "https://images.unsplash.com/photo-1511920170033-f8396924c348?w=400",
+      }));
+      setScenes(updatedScenes);
+      setIsGenerating(false);
+      setJobStatus("");
+      toast({
+        title: "Готово!",
+        description: "Все изображения сгенерированы",
+      });
+    }, 3000);
+  };
+
+  return (
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <div className="container mx-auto px-4 py-4 md:py-6">
+        {/* Header */}
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            className="mb-4"
+            onClick={() => navigate("/projects")}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Назад к проектам
+          </Button>
+          
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-bold mb-2">{project.name}</h1>
+              <Badge className={`${getStatusColor(project.status)} text-white`}>
+                {project.status === "ready" ? "Готов" : 
+                 project.status === "processing" ? "Обработка" :
+                 project.status === "draft" ? "Черновик" : "Ошибка"}
+              </Badge>
+            </div>
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
+              <Edit className="w-4 h-4 mr-2" />
+              Редактировать
+            </Button>
+          </div>
+        </div>
+
+        {/* Progress Steps */}
+        <Card className="p-6 mb-6">
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium">Прогресс проекта</span>
+              <span className="text-sm text-muted-foreground">
+                {completedScenes} из {scenes.length} готово
+              </span>
+            </div>
+            <Progress value={progressValue} className="h-2" />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className={`flex items-center gap-2 ${currentStep === "prompts" ? "text-primary" : completedScenes > 0 ? "text-green-500" : ""}`}>
+              {completedScenes > 0 ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-5 h-5 rounded-full border-2" />}
+              <span className="text-sm font-medium">1. Промпты</span>
+            </div>
+            <div className="h-px bg-border flex-1 mx-4" />
+            <div className={`flex items-center gap-2 ${currentStep === "images" ? "text-primary" : ""}`}>
+              <div className="w-5 h-5 rounded-full border-2" />
+              <span className="text-sm font-medium">2. Изображения</span>
+            </div>
+            <div className="h-px bg-border flex-1 mx-4" />
+            <div className="flex items-center gap-2">
+              <div className="w-5 h-5 rounded-full border-2" />
+              <span className="text-sm font-medium">3. Видео</span>
+            </div>
+          </div>
+          
+          {jobStatus && (
+            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {jobStatus}
+            </div>
+          )}
+        </Card>
+
+        {/* Control Panel */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          <Button 
+            onClick={handleGeneratePrompts}
+            disabled={isGenerating}
+            className="w-full gap-2"
+          >
+            <Sparkles className="w-4 h-4" />
+            Generate Prompts
+          </Button>
+          <Button 
+            onClick={handleGenerateImages}
+            disabled={isGenerating || completedScenes === 0}
+            className="w-full gap-2"
+          >
+            <ImageIcon className="w-4 h-4" />
+            Generate Images
+          </Button>
+          <Button 
+            disabled
+            variant="outline"
+            className="w-full gap-2"
+          >
+            <Video className="w-4 h-4" />
+            Generate Video (скоро)
+          </Button>
+        </div>
+
+        {/* Error Display */}
+        {project.status === "error" && (
+          <Card className="p-4 mb-6 border-red-500 bg-red-50 dark:bg-red-950">
+            <div className="flex gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold text-red-900 dark:text-red-100 mb-1">
+                  Произошла ошибка
+                </h3>
+                <p className="text-sm text-red-700 dark:text-red-300">
+                  Не удалось сгенерировать контент. Попробуйте еще раз.
+                </p>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* Scenes */}
+        <div className="mb-4">
+          <h2 className="text-xl font-bold mb-4">
+            Сцены ({completedScenes} из {scenes.length} готово)
+          </h2>
+        </div>
+
+        <div className="grid gap-4">
+          {scenes.map((scene) => (
+            <Card key={scene.id} className="p-4 md:p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Сцена {scene.number}</h3>
+                <Badge variant={scene.status === "ready" ? "default" : "secondary"}>
+                  {scene.status === "ready" ? "Готова" : 
+                   scene.status === "pending" ? "Ожидает" : "Ошибка"}
+                </Badge>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {/* Prompts */}
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm font-medium">Промпт для изображения</label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(scene.imagePrompt)}
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <Textarea
+                      value={scene.imagePrompt}
+                      readOnly
+                      rows={4}
+                      className="resize-none text-sm bg-muted"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm font-medium">Промпт для видео</label>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(scene.videoPrompt)}
+                      >
+                        <Copy className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <Textarea
+                      value={scene.videoPrompt}
+                      readOnly
+                      rows={4}
+                      className="resize-none text-sm bg-muted"
+                    />
+                  </div>
+                </div>
+
+                {/* Result */}
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Результат</label>
+                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                    {scene.imageUrl ? (
+                      <img 
+                        src={scene.imageUrl} 
+                        alt={`Сцена ${scene.number}`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Edit Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Редактировать проект</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium mb-2 block">Название проекта*</label>
+              <Input defaultValue={project.name} />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium mb-2 block">Описание персонажа</label>
+              <Textarea defaultValue={project.characterDescription} rows={3} />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">Описание сеттинга/локации</label>
+              <Textarea defaultValue={project.settingDescription} rows={3} />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">Сценарий / Диалог</label>
+              <Textarea defaultValue={project.script} rows={4} />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium mb-2 block">Другие пожелания</label>
+              <Textarea defaultValue={project.additionalNotes} rows={3} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Тип видео</label>
+                <Select defaultValue={project.videoType}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="series">Series (разные фоны)</SelectItem>
+                    <SelectItem value="continuous">Continuous (один фон)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Количество сцен</label>
+                <Input type="number" min={1} defaultValue={project.sceneCount} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium mb-2 block">Соотношение сторон</label>
+                <Select defaultValue={project.aspectRatio}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="9:16">9:16 (вертикальное)</SelectItem>
+                    <SelectItem value="16:9">16:9 (горизонтальное)</SelectItem>
+                    <SelectItem value="1:1">1:1 (квадрат)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium mb-2 block">Модель для изображений</label>
+                <Select defaultValue={project.imageModel}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="seedream">Seedream 4.0</SelectItem>
+                    <SelectItem value="nanobanana">Nanobanana</SelectItem>
+                    <SelectItem value="stable-diffusion">Stable Diffusion</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="flex gap-3 pt-4">
+              <Button className="flex-1" onClick={() => setIsEditDialogOpen(false)}>
+                Сохранить
+              </Button>
+              <Button variant="outline" className="flex-1" onClick={() => setIsEditDialogOpen(false)}>
+                Отмена
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default ProjectDetail;

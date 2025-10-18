@@ -97,7 +97,7 @@ const Projects = () => {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4 md:mb-6 gap-3">
           <h1 className="text-2xl md:text-3xl font-bold">Мои проекты</h1>
-          <Button onClick={() => navigate("/")} className="gap-2 w-full md:w-auto">
+          <Button onClick={() => navigate("/projects/new")} className="gap-2 w-full md:w-auto">
             <Plus className="w-4 h-4" />
             Создать
           </Button>
@@ -157,6 +157,7 @@ const Projects = () => {
             {filteredProjects.map((project) => (
               <Card
                 key={project.id}
+                onClick={() => navigate(`/project/${project.id}`)}
                 className="overflow-hidden cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02]"
               >
                 <div className="aspect-video relative overflow-hidden bg-muted">
