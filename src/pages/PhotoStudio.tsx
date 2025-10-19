@@ -67,8 +67,23 @@ const PhotoStudio = () => {
             <div className="max-w-4xl mx-auto">
               <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Генератор контента</h2>
               
-              <Card className="p-6 md:p-8 mb-4 md:mb-6 border-2 border-dashed border-[hsl(var(--mode-photo))] bg-[hsl(var(--mode-photo))]/5 text-center cursor-pointer hover:bg-[hsl(var(--mode-photo))]/10 transition-colors">
-                <Upload className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-[hsl(var(--mode-photo))]" />
+              <Card 
+                className="p-6 md:p-8 mb-4 md:mb-6 border-2 border-dashed text-center cursor-pointer transition-colors"
+                style={{
+                  borderColor: 'hsl(var(--mode-photo))',
+                  backgroundColor: 'hsl(var(--mode-photo) / 0.05)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'hsl(var(--mode-photo) / 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'hsl(var(--mode-photo) / 0.05)';
+                }}
+              >
+                <Upload 
+                  className="w-10 h-10 md:w-12 md:h-12 mx-auto mb-3 md:mb-4" 
+                  style={{ color: 'hsl(var(--mode-photo))' }}
+                />
                 <p className="text-base md:text-lg font-semibold mb-2">Загрузите фото товара</p>
                 <p className="text-xs md:text-sm text-muted-foreground">
                   Перетащите файл или нажмите для выбора
@@ -83,7 +98,13 @@ const PhotoStudio = () => {
                   {styles.map((style) => (
                     <Card
                       key={style.id}
-                      className="p-4 cursor-pointer hover:border-[hsl(var(--mode-photo))] transition-all"
+                      className="p-4 cursor-pointer transition-all"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.borderColor = 'hsl(var(--mode-photo))';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.borderColor = '';
+                      }}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-3xl">{style.emoji}</span>

@@ -55,10 +55,16 @@ const Index = () => {
               className="p-4 md:p-6 cursor-pointer hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <div className="flex items-center gap-3 md:gap-4">
-                <div
-                  className={`p-3 md:p-4 rounded-lg md:rounded-xl bg-[hsl(var(--${mode.color}))]`}
-                >
-                  <mode.icon className={`w-6 h-6 md:w-8 md:h-8 text-[hsl(var(--${mode.color}-foreground))]`} />
+              <div
+                className="p-3 md:p-4 rounded-lg md:rounded-xl"
+                style={{ 
+                  backgroundColor: `hsl(var(--${mode.color}))`,
+                }}
+              >
+                <mode.icon 
+                  className="w-6 h-6 md:w-8 md:h-8" 
+                  style={{ color: `hsl(var(--${mode.color}-foreground))` }}
+                />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-base md:text-xl font-semibold mb-0.5 md:mb-1">{mode.title}</h3>

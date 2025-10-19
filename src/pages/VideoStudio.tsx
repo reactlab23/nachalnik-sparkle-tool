@@ -61,8 +61,17 @@ const VideoStudio = () => {
               <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6">Генератор контента</h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4 md:mb-6">
-                <Card className="p-6 cursor-pointer hover:bg-muted transition-colors border-2 border-[hsl(var(--mode-video))] bg-[hsl(var(--mode-video))]/5">
-                  <FileText className="w-8 h-8 text-[hsl(var(--mode-video))] mb-3" />
+                <Card 
+                  className="p-6 cursor-pointer hover:bg-muted transition-colors border-2"
+                  style={{
+                    borderColor: 'hsl(var(--mode-video))',
+                    backgroundColor: 'hsl(var(--mode-video) / 0.05)'
+                  }}
+                >
+                  <FileText 
+                    className="w-8 h-8 mb-3" 
+                    style={{ color: 'hsl(var(--mode-video))' }}
+                  />
                   <h3 className="font-semibold mb-2">Создать по сценарию</h3>
                   <p className="text-sm text-muted-foreground">
                     Напишите или загрузите готовый сценарий
@@ -70,7 +79,10 @@ const VideoStudio = () => {
                 </Card>
 
                 <Card className="p-6 cursor-pointer hover:bg-muted transition-colors">
-                  <Sparkles className="w-8 h-8 text-[hsl(var(--mode-video))] mb-3" />
+                  <Sparkles 
+                    className="w-8 h-8 mb-3" 
+                    style={{ color: 'hsl(var(--mode-video))' }}
+                  />
                   <h3 className="font-semibold mb-2">Генерация AI</h3>
                   <p className="text-sm text-muted-foreground">
                     AI создаст сценарий по вашей идее
