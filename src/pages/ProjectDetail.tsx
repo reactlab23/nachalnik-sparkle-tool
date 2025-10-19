@@ -149,98 +149,86 @@ const ProjectDetail = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
-      <div className="container mx-auto px-4 py-4 md:py-6">
+      <div className="container mx-auto px-4 py-4 max-w-5xl">
         {/* Header */}
-        <div className="mb-6">
+        <div className="flex items-center justify-between mb-4">
           <Button
             variant="ghost"
-            className="mb-4"
+            size="sm"
             onClick={() => navigate("/projects")}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Назад к проектам
+            К проектам
           </Button>
-          
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
+            <Edit className="w-4 h-4 mr-2" />
+            Редактировать
+          </Button>
+        </div>
+
+        {/* Title & Status */}
+        <div className="mb-4">
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-2xl font-bold">{project.name}</h1>
+            <Badge className={`${getStatusColor(project.status)} text-white`}>
+              {project.status === "ready" ? "Готов" : 
+               project.status === "processing" ? "Обработка" :
+               project.status === "draft" ? "Черновик" : "Ошибка"}
+            </Badge>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {completedScenes} из {scenes.length} сцен готово
+          </p>
+        </div>
+
+        {/* Compact Progress & Controls */}
+        <Card className="p-4 mb-4">
+          <div className="space-y-4">
+            {/* Progress Bar */}
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold mb-2">{project.name}</h1>
-              <Badge className={`${getStatusColor(project.status)} text-white`}>
-                {project.status === "ready" ? "Готов" : 
-                 project.status === "processing" ? "Обработка" :
-                 project.status === "draft" ? "Черновик" : "Ошибка"}
-              </Badge>
+              <Progress value={progressValue} className="h-2" />
             </div>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(true)}>
-              <Edit className="w-4 h-4 mr-2" />
-              Редактировать
-            </Button>
-          </div>
-        </div>
+            
+            {/* Status Indicator */}
+            {jobStatus && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {jobStatus}
+              </div>
+            )}
 
-        {/* Progress Steps */}
-        <Card className="p-6 mb-6">
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Прогресс проекта</span>
-              <span className="text-sm text-muted-foreground">
-                {completedScenes} из {scenes.length} готово
-              </span>
+            {/* Control Buttons */}
+            <div className="grid grid-cols-3 gap-2">
+              <Button 
+                onClick={handleGeneratePrompts}
+                disabled={isGenerating}
+                size="sm"
+                className="gap-2"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span className="hidden md:inline">Generate</span> Prompts
+              </Button>
+              <Button 
+                onClick={handleGenerateImages}
+                disabled={isGenerating || completedScenes === 0}
+                size="sm"
+                className="gap-2"
+              >
+                <ImageIcon className="w-4 h-4" />
+                <span className="hidden md:inline">Generate</span> Images
+              </Button>
+              <Button 
+                disabled
+                variant="outline"
+                size="sm"
+                className="gap-2"
+              >
+                <Video className="w-4 h-4" />
+                <span className="hidden md:inline">Generate</span> Video
+              </Button>
             </div>
-            <Progress value={progressValue} className="h-2" />
           </div>
-          
-          <div className="flex items-center justify-between">
-            <div className={`flex items-center gap-2 ${currentStep === "prompts" ? "text-primary" : completedScenes > 0 ? "text-green-500" : ""}`}>
-              {completedScenes > 0 ? <CheckCircle2 className="w-5 h-5" /> : <div className="w-5 h-5 rounded-full border-2" />}
-              <span className="text-sm font-medium">1. Промпты</span>
-            </div>
-            <div className="h-px bg-border flex-1 mx-4" />
-            <div className={`flex items-center gap-2 ${currentStep === "images" ? "text-primary" : ""}`}>
-              <div className="w-5 h-5 rounded-full border-2" />
-              <span className="text-sm font-medium">2. Изображения</span>
-            </div>
-            <div className="h-px bg-border flex-1 mx-4" />
-            <div className="flex items-center gap-2">
-              <div className="w-5 h-5 rounded-full border-2" />
-              <span className="text-sm font-medium">3. Видео</span>
-            </div>
-          </div>
-          
-          {jobStatus && (
-            <div className="mt-4 flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {jobStatus}
-            </div>
-          )}
         </Card>
-
-        {/* Control Panel */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-          <Button 
-            onClick={handleGeneratePrompts}
-            disabled={isGenerating}
-            className="w-full gap-2"
-          >
-            <Sparkles className="w-4 h-4" />
-            Generate Prompts
-          </Button>
-          <Button 
-            onClick={handleGenerateImages}
-            disabled={isGenerating || completedScenes === 0}
-            className="w-full gap-2"
-          >
-            <ImageIcon className="w-4 h-4" />
-            Generate Images
-          </Button>
-          <Button 
-            disabled
-            variant="outline"
-            className="w-full gap-2"
-          >
-            <Video className="w-4 h-4" />
-            Generate Video (скоро)
-          </Button>
-        </div>
 
         {/* Error Display */}
         {project.status === "error" && (
@@ -260,72 +248,70 @@ const ProjectDetail = () => {
         )}
 
         {/* Scenes */}
-        <div className="mb-4">
-          <h2 className="text-xl font-bold mb-4">
-            Сцены ({completedScenes} из {scenes.length} готово)
-          </h2>
-        </div>
+        <h2 className="text-lg font-bold mb-3">Сцены</h2>
 
         <Accordion type="single" collapsible className="space-y-2">
           {scenes.map((scene) => (
-            <AccordionItem key={scene.id} value={scene.id} className="border rounded-lg">
-              <AccordionTrigger className="px-4 md:px-6 hover:no-underline">
+            <AccordionItem key={scene.id} value={scene.id} className="border rounded-lg bg-card">
+              <AccordionTrigger className="px-4 py-3 hover:no-underline">
                 <div className="flex items-center justify-between w-full pr-4">
-                  <h3 className="font-semibold">Сцена {scene.number}</h3>
-                  <Badge variant={scene.status === "ready" ? "default" : "secondary"}>
+                  <h3 className="text-sm font-semibold">Сцена {scene.number}</h3>
+                  <Badge variant={scene.status === "ready" ? "default" : "secondary"} className="text-xs">
                     {scene.status === "ready" ? "Готова" : 
                      scene.status === "pending" ? "Ожидает" : "Ошибка"}
                   </Badge>
                 </div>
               </AccordionTrigger>
               
-              <AccordionContent className="px-4 md:px-6 pb-4">
-                <div className="grid md:grid-cols-2 gap-4">
+              <AccordionContent className="px-4 pb-4">
+                <div className="grid md:grid-cols-[1fr,300px] gap-4">
                   {/* Prompts */}
-                  <div className="space-y-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium">Промпт для изображения</label>
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-medium text-muted-foreground">Image Prompt</label>
                         <Button
                           variant="ghost"
                           size="sm"
+                          className="h-6 w-6 p-0"
                           onClick={() => copyToClipboard(scene.imagePrompt)}
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="w-3 h-3" />
                         </Button>
                       </div>
                       <Textarea
                         value={scene.imagePrompt}
                         readOnly
-                        rows={4}
-                        className="resize-none text-sm bg-muted"
+                        rows={3}
+                        className="resize-none text-xs bg-muted/50"
                       />
                     </div>
 
-                    <div>
-                      <div className="flex items-center justify-between mb-2">
-                        <label className="text-sm font-medium">Промпт для видео</label>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-medium text-muted-foreground">Video Prompt</label>
                         <Button
                           variant="ghost"
                           size="sm"
+                          className="h-6 w-6 p-0"
                           onClick={() => copyToClipboard(scene.videoPrompt)}
                         >
-                          <Copy className="w-4 h-4" />
+                          <Copy className="w-3 h-3" />
                         </Button>
                       </div>
                       <Textarea
                         value={scene.videoPrompt}
                         readOnly
-                        rows={4}
-                        className="resize-none text-sm bg-muted"
+                        rows={2}
+                        className="resize-none text-xs bg-muted/50"
                       />
                     </div>
                   </div>
 
                   {/* Result */}
                   <div>
-                    <label className="text-sm font-medium mb-2 block">Результат</label>
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                    <label className="text-xs font-medium text-muted-foreground mb-2 block">Результат</label>
+                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center overflow-hidden border">
                       {scene.imageUrl ? (
                         <img 
                           src={scene.imageUrl} 
@@ -333,7 +319,7 @@ const ProjectDetail = () => {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <ImageIcon className="w-12 h-12 text-muted-foreground" />
+                        <ImageIcon className="w-10 h-10 text-muted-foreground" />
                       )}
                     </div>
                   </div>
@@ -351,74 +337,74 @@ const ProjectDetail = () => {
             <DialogTitle>Редактировать проект</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">Название проекта*</label>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Название проекта*</label>
               <Input defaultValue={project.name} />
             </div>
             
-            <div>
-              <label className="text-sm font-medium mb-2 block">Описание персонажа</label>
-              <Textarea defaultValue={project.characterDescription} rows={3} />
+            <div className="space-y-3 p-3 rounded-lg bg-muted/30">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Персонаж</label>
+                <Textarea defaultValue={project.characterDescription} rows={2} className="text-sm" />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Локация</label>
+                <Textarea defaultValue={project.settingDescription} rows={2} className="text-sm" />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Сценарий</label>
+                <Textarea defaultValue={project.script} rows={3} className="text-sm" />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Пожелания</label>
+                <Textarea defaultValue={project.additionalNotes} rows={2} className="text-sm" />
+              </div>
             </div>
 
-            <div>
-              <label className="text-sm font-medium mb-2 block">Описание сеттинга/локации</label>
-              <Textarea defaultValue={project.settingDescription} rows={3} />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-2 block">Сценарий / Диалог</label>
-              <Textarea defaultValue={project.script} rows={4} />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium mb-2 block">Другие пожелания</label>
-              <Textarea defaultValue={project.additionalNotes} rows={3} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Тип видео</label>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <label className="text-xs font-medium">Тип видео</label>
                 <Select defaultValue={project.videoType}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="series">Series (разные фоны)</SelectItem>
-                    <SelectItem value="continuous">Continuous (один фон)</SelectItem>
+                    <SelectItem value="series">Series</SelectItem>
+                    <SelectItem value="continuous">Continuous</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Количество сцен</label>
-                <Input type="number" min={1} defaultValue={project.sceneCount} />
+              <div className="space-y-2">
+                <label className="text-xs font-medium">Сцены</label>
+                <Input type="number" min={1} defaultValue={project.sceneCount} className="h-9" />
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Соотношение сторон</label>
+              <div className="space-y-2">
+                <label className="text-xs font-medium">Формат</label>
                 <Select defaultValue={project.aspectRatio}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="9:16">9:16 (вертикальное)</SelectItem>
-                    <SelectItem value="16:9">16:9 (горизонтальное)</SelectItem>
-                    <SelectItem value="1:1">1:1 (квадрат)</SelectItem>
+                    <SelectItem value="9:16">9:16</SelectItem>
+                    <SelectItem value="16:9">16:9</SelectItem>
+                    <SelectItem value="1:1">1:1</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div>
-                <label className="text-sm font-medium mb-2 block">Модель для изображений</label>
+              <div className="space-y-2">
+                <label className="text-xs font-medium">Модель</label>
                 <Select defaultValue={project.imageModel}>
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="seedream">Seedream 4.0</SelectItem>
+                    <SelectItem value="seedream">Seedream</SelectItem>
                     <SelectItem value="nanobanana">Nanobanana</SelectItem>
                     <SelectItem value="stable-diffusion">Stable Diffusion</SelectItem>
                   </SelectContent>
@@ -426,11 +412,11 @@ const ProjectDetail = () => {
               </div>
             </div>
 
-            <div className="flex gap-3 pt-4">
+            <div className="flex gap-3 pt-2">
               <Button className="flex-1" onClick={() => setIsEditDialogOpen(false)}>
                 Сохранить
               </Button>
-              <Button variant="outline" className="flex-1" onClick={() => setIsEditDialogOpen(false)}>
+              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
                 Отмена
               </Button>
             </div>
